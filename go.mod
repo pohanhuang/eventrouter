@@ -8,7 +8,7 @@ require (
 	github.com/Azure/azure-event-hubs-go/v2 v2.0.3
 	github.com/Shopify/sarama v1.23.1
 	github.com/aws/aws-sdk-go v1.34.0
-	github.com/crewjam/rfc5424 v0.0.0-20180723152949-c25bdd3a0ba2
+	github.com/crewjam/rfc5424 v0.1.0
 	github.com/eapache/channels v1.1.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/influxdata/influxdb v1.7.7

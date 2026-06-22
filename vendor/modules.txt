@@ -105,8 +105,8 @@ github.com/beorn7/perks/quantile
 # github.com/cespare/xxhash/v2 v2.1.1
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
-# github.com/crewjam/rfc5424 v0.0.0-20180723152949-c25bdd3a0ba2
-## explicit
+# github.com/crewjam/rfc5424 v0.1.0
+## explicit; go 1.13
 github.com/crewjam/rfc5424
 # github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 ## explicit
