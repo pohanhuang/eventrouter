@@ -7,7 +7,7 @@ replace github.com/emicklei/go-restful => github.com/emicklei/go-restful v2.16.0
 require (
 	github.com/Azure/azure-event-hubs-go/v2 v2.0.3
 	github.com/Shopify/sarama v1.23.1
-	github.com/aws/aws-sdk-go v1.34.0
+	github.com/aws/aws-sdk-go v1.55.8
 	github.com/crewjam/rfc5424 v0.0.0-20180723152949-c25bdd3a0ba2
 	github.com/eapache/channels v1.1.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
@@ -62,7 +62,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jcmturner/gofork v0.0.0-20190328161633-dc7c13fece03 // indirect
-	github.com/jmespath/go-jmespath v0.3.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.0 // indirect
