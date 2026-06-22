@@ -6,7 +6,7 @@ replace github.com/emicklei/go-restful => github.com/emicklei/go-restful v2.16.0
 
 require (
 	github.com/Azure/azure-event-hubs-go/v2 v2.0.5
-	github.com/Shopify/sarama v1.23.1
+	github.com/Shopify/sarama v1.50.3
 	github.com/aws/aws-sdk-go v1.34.0
 	github.com/crewjam/rfc5424 v0.0.0-20180723152949-c25bdd3a0ba2
 	github.com/eapache/channels v1.1.0
