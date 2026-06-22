@@ -10,7 +10,7 @@ github.com/Azure/azure-amqp-common-go/v2/internal/tracing
 github.com/Azure/azure-amqp-common-go/v2/rpc
 github.com/Azure/azure-amqp-common-go/v2/sas
 github.com/Azure/azure-amqp-common-go/v2/uuid
-# github.com/Azure/azure-event-hubs-go/v2 v2.0.3
+# github.com/Azure/azure-event-hubs-go/v2 v2.0.5
 ## explicit; go 1.13
 github.com/Azure/azure-event-hubs-go/v2
 github.com/Azure/azure-event-hubs-go/v2/atom
