@@ -14,7 +14,7 @@ require (
 	github.com/influxdata/influxdb v1.7.7
 	github.com/json-iterator/go v1.1.12
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/nytlabs/gojsonexplode v0.0.0-20160201065013-0f3fe6bb573f
+	github.com/nytlabs/gojsonexplode v0.0.0-20200518202627-78c8f38f2dac
 	github.com/prometheus/client_golang v1.11.1
 	github.com/rockset/rockset-go-client v0.6.0
 	github.com/sethgrid/pester v0.0.0-20190127155807-68a33a018ad0
