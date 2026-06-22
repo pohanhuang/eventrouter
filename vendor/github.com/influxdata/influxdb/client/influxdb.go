@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
@@ -19,6 +18,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/influxdata/flux"
+	"github.com/influxdata/flux/csv"
+	fluxClient "github.com/influxdata/influxdb/flux/client"
 	"github.com/influxdata/influxdb/models"
 )
 
@@ -31,6 +33,7 @@ const (
 
 	// DefaultTimeout is the default connection timeout used to connect to an InfluxDB instance
 	DefaultTimeout = 0
+	DefaultPath    = ""
 )
 
 // Query is used to send a command to the server. Both Command and Database are required.
@@ -64,23 +67,33 @@ type Query struct {
 	NodeID int
 }
 
+// SplitPath gets the path of a url
+func SplitPath(v string) (string, string) {
+	first, rest, _ := strings.Cut(v, "/")
+	return first, rest
+}
+
 // ParseConnectionString will parse a string to create a valid connection URL
 func ParseConnectionString(path string, ssl bool) (url.URL, error) {
 	var host string
 	var port int
+	var pth string = ""
 
 	h, p, err := net.SplitHostPort(path)
 	if err != nil {
 		if path == "" {
 			host = DefaultHost
 		} else {
-			host = path
+			host, pth = SplitPath(path)
 		}
 		// If they didn't specify a port, always use the default port
 		port = DefaultPort
 	} else {
 		host = h
-		port, err = strconv.Atoi(p)
+		prt, pt := SplitPath(p)
+		pth = pt
+
+		port, err = strconv.Atoi(prt)
 		if err != nil {
 			return url.URL{}, fmt.Errorf("invalid port number %q: %s\n", path, err)
 		}
@@ -89,6 +102,7 @@ func ParseConnectionString(path string, ssl bool) (url.URL, error) {
 	u := url.URL{
 		Scheme: "http",
 		Host:   host,
+		Path:   pth,
 	}
 	if ssl {
 		u.Scheme = "https"
@@ -288,6 +302,42 @@ func (c *Client) QueryContext(ctx context.Context, q Query) (*Response, error) {
 	return &response, nil
 }
 
+// QueryContext sends a command to the server and returns the Response
+// It uses a context that can be cancelled by the command line client
+func (c *Client) QueryFlux(ctx context.Context, query *fluxClient.QueryRequest) (flux.ResultIterator, error) {
+	u := c.url
+	u.Path = path.Join(u.Path, "api/v2/query")
+
+	body, err := json.Marshal(query)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", u.String(), bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("User-Agent", c.userAgent)
+	req.Header.Set("Content-Type", "application/json")
+	if c.username != "" {
+		req.SetBasicAuth(c.username, c.password)
+	}
+	req = req.WithContext(ctx)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := CheckError(resp); err != nil {
+		resp.Body.Close()
+		return nil, err
+	}
+
+	dec := csv.NewMultiResultDecoder(csv.ResultDecoderConfig{})
+	return dec.Decode(resp.Body)
+}
+
 // Write takes BatchPoints and allows for writing of multiple points with defaults
 // If successful, error is nil and Response is nil
 // If an error occurs, Response may contain additional information if populated.
@@ -352,13 +402,13 @@ func (c *Client) Write(bp BatchPoints) (*Response, error) {
 	defer resp.Body.Close()
 
 	var response Response
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
-		var err = fmt.Errorf(string(body))
+		var err = errors.New(string(body))
 		response.Err = err
 		return &response, err
 	}
@@ -398,13 +448,13 @@ func (c *Client) WriteLineProtocol(data, database, retentionPolicy, precision, w
 	defer resp.Body.Close()
 
 	var response Response
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
-		err := fmt.Errorf(string(body))
+		err := errors.New(string(body))
 		response.Err = err
 		return &response, err
 	}
@@ -594,7 +644,7 @@ func (r *ChunkedResponse) NextResponse() (*Response, error) {
 		// A decoding error happened. This probably means the server crashed
 		// and sent a last-ditch error message to us. Ensure we have read the
 		// entirety of the connection to get any remaining error text.
-		io.Copy(ioutil.Discard, r.duplex)
+		io.Copy(io.Discard, r.duplex)
 		return nil, errors.New(strings.TrimSpace(r.buf.String()))
 	}
 	r.buf.Reset()
