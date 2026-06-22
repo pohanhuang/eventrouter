@@ -249,7 +249,7 @@ github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 ## explicit
 github.com/munnerz/goautoneg
-# github.com/nytlabs/gojsonexplode v0.0.0-20160201065013-0f3fe6bb573f
+# github.com/nytlabs/gojsonexplode v0.0.0-20200518202627-78c8f38f2dac
 ## explicit
 github.com/nytlabs/gojsonexplode
 # github.com/pelletier/go-toml v1.2.0
