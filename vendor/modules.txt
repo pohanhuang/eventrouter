@@ -297,9 +297,10 @@ github.com/sethgrid/pester
 ## explicit
 github.com/spf13/afero
 github.com/spf13/afero/mem
-# github.com/spf13/cast v1.3.0
-## explicit
+# github.com/spf13/cast v1.10.0
+## explicit; go 1.21.0
 github.com/spf13/cast
+github.com/spf13/cast/internal
 # github.com/spf13/jwalterweatherman v1.0.0
 ## explicit
 github.com/spf13/jwalterweatherman
